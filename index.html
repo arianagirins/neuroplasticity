@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neuroplasticity – How Habits Form in the Brain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --bg:#0a0e19;--panel:#111729;--panel2:#161e36;--line:#243052;--text:#e8ecf7;--muted:#8e99b9;
+  --pfc:#4C8DFF;--str:#FFC93C;--hip:#3DDC97;--mot:#FF5A5F;--amy:#B57BFF;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;margin:0;letter-spacing:-.01em}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 18px 60px}
+header{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+header h1{font-size:clamp(22px,3vw,32px)}
+header p{margin:4px 0 0;color:var(--muted);max-width:640px}
+.hud{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.chip .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.chip .v{font-family:"Space Grotesk";font-size:20px;font-weight:700}
+.will{width:220px}
+.bar{height:10px;border-radius:6px;background:#0c1222;overflow:hidden;border:1px solid var(--line)}
+.bar>i{display:block;height:100%;border-radius:6px;transition:width .5s ease}
+.will .bar>i{background:linear-gradient(90deg,#4C8DFF,#8fb6ff)}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+@media (max-width:920px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px}
+.card h2{font-size:18px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 10px}
+#net{width:100%;height:auto;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+.node{cursor:grab}
+.node:active{cursor:grabbing}
+.nlabel{font:600 13px Inter,sans-serif;fill:#e8ecf7;pointer-events:none;paint-order:stroke;stroke:#0a0e19;stroke-width:4px}
+.nrole{font:500 10.5px Inter,sans-serif;fill:#8e99b9;pointer-events:none;paint-order:stroke;stroke:#0a0e19;stroke-width:3px}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px;margin-top:10px}
+.lg{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border-radius:12px;padding:9px 10px;font-size:12.5px;color:var(--muted)}
+.lg b{color:var(--text);display:block;font-size:13px}
+.dot{width:12px;height:12px;border-radius:50%;flex:none;margin-top:4px;box-shadow:0 0 10px currentColor}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+button{font:600 14px Inter,sans-serif;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer;transition:transform .1s,border-color .2s,background .2s}
+button:hover{border-color:#3a4a7a;background:#1b2544}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:#2a4fb0;border-color:#3d66d6}
+button.primary:hover{background:#3360d0}
+.acts{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media (max-width:560px){.acts{grid-template-columns:repeat(3,1fr)}}
+.act{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px;border-radius:14px;position:relative}
+.act .em{font-size:24px;line-height:1.2}
+.act .nm{font-size:12.5px;text-align:center;line-height:1.2}
+.act .cost{font-size:11px;color:var(--muted);font-weight:500}
+.act.done::after{content:"✓";position:absolute;top:4px;right:8px;color:#3DDC97;font-size:13px}
+.act.active{outline:2px solid var(--c)}
+#stage{width:100%;height:auto;display:block;background:radial-gradient(ellipse at 50% 30%,#1a2445,#0f1528 70%);border-radius:14px;border:1px solid var(--line)}
+.caption{font-size:13px;color:var(--muted);margin:8px 2px 12px;min-height:20px}
+.info h3{font-size:16px;margin:2px 0 8px}
+.info ul{margin:0;padding-left:0;list-style:none}
+.info li{position:relative;padding-left:18px;margin:6px 0;font-size:13.5px}
+.info li::before{content:"";position:absolute;left:2px;top:8px;width:8px;height:8px;border-radius:50%;background:var(--c,#8e99b9)}
+.habitnote{margin-top:10px;background:var(--panel2);border-left:3px solid var(--c,#4C8DFF);padding:9px 12px;border-radius:8px;font-size:13px}
+.control{margin-top:12px;font-size:12px;color:var(--muted)}
+.control .bar{height:14px;display:flex}
+.control .bar i{border-radius:0}
+.control .ends{display:flex;justify-content:space-between;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-weight:600;color:var(--muted);text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:6px 6px;border-bottom:1px solid var(--line)}
+td{padding:8px 6px;border-bottom:1px solid #1b2440;vertical-align:middle}
+td .bar{height:8px;min-width:90px}
+.tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:20px;background:#1b2544;color:var(--muted)}
+.tag.auto{background:#173c2f;color:#7ff0c0}
+#chart{width:100%;height:260px;display:block}
+.bottom{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:920px){.bottom{grid-template-columns:1fr}}
+.learn{margin-top:16px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px}
+.step{background:var(--panel2);border-radius:14px;padding:12px 14px;font-size:13.5px;color:#c9d0e6}
+.step h3{font-size:15px;color:var(--text);margin-bottom:4px}
+.step .n{font-family:"Space Grotesk";font-weight:700;color:var(--pfc);font-size:13px}
+.foot{color:var(--muted);font-size:12px;margin-top:14px}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);opacity:0;background:#1d2747;border:1px solid #3a4a7a;color:var(--text);padding:12px 16px;border-radius:14px;max-width:min(560px,92vw);font-size:14px;box-shadow:0 10px 40px #0008;transition:all .35s ease;z-index:10;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Figure animations */
+.fig{stroke:#e8ecf7;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.head{fill:#e8ecf7}
+.pose{display:none}
+.pose.on{display:inline}
+.bob{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.runbob{animation:runbob .25s ease-in-out infinite alternate}
+@keyframes runbob{to{transform:translateY(-5px)}}
+.sw-a{animation:swing .5s ease-in-out infinite alternate}
+.sw-b{animation:swing .5s ease-in-out infinite alternate-reverse}
+@keyframes swing{from{transform:rotate(-34deg)}to{transform:rotate(34deg)}}
+.ground{stroke:#3a4a7a;stroke-width:3;stroke-dasharray:16 12;animation:groundmove .4s linear infinite}
+@keyframes groundmove{to{stroke-dashoffset:28}}
+.speed{stroke:#8e99b9;stroke-width:2.5;stroke-linecap:round;animation:speed .6s linear infinite}
+@keyframes speed{from{transform:translateX(20px);opacity:0}40%{opacity:.8}to{transform:translateX(-30px);opacity:0}}
+.feed{animation:feed 1.1s linear infinite}
+@keyframes feed{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+.float{animation:floatup 2.2s ease-out infinite;opacity:0}
+@keyframes floatup{0%{opacity:0;transform:translateY(8px)}20%{opacity:1}100%{opacity:0;transform:translateY(-38px)}}
+.breathe{animation:breathe 4s ease-in-out infinite;transform-origin:160px 140px}
+@keyframes breathe{50%{transform:scale(1.04)}}
+.ring{transform-box:fill-box;transform-origin:center;animation:ring 4s ease-out infinite;opacity:0}
+@keyframes ring{0%{transform:scale(.4);opacity:.7}100%{transform:scale(1.6);opacity:0}}
+.wiggle{animation:wiggle 1.6s ease-in-out infinite}
+@keyframes wiggle{25%{transform:translateY(-4px)}75%{transform:translateY(2px)}}
+
+.hud .chip{min-width:84px}
+.time .bar>i{background:linear-gradient(90deg,#3DDC97,#9af0c9)}
+.goals{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 16px;background:linear-gradient(90deg,#16204099,#111729);border:1px solid var(--line);border-radius:16px;padding:12px 16px}
+.goals .gt{font-family:"Space Grotesk";font-weight:700;font-size:15px;margin-right:6px}
+.gchip{font-size:12.5px;padding:5px 10px;border-radius:20px;background:#1b2544;color:#c9d0e6;border:1px solid var(--line)}
+.gchip.ok{background:#173c2f;border-color:#2c6b52;color:#8ff3c6}
+.gchip.bad{background:#3d1a22;border-color:#6b2c3a;color:#ffb0bb}
+.act .cost{white-space:nowrap}
+select{font:500 12px Inter,sans-serif;background:#0d1328;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:4px 6px;max-width:130px}
+.event{margin:0 0 10px;padding:8px 12px;border-radius:10px;font-size:13px;background:#2b2140;border:1px solid #4a3a6e;display:none}
+#modal{position:fixed;inset:0;background:#05080fcc;display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+#modal.show{display:flex}
+.mbox{background:var(--panel);border:1px solid #3a4a7a;border-radius:20px;max-width:460px;width:100%;padding:22px;box-shadow:0 20px 60px #000a;animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.mbox h2{font-size:22px;margin-bottom:6px}
+.mbox p{color:#c9d0e6;font-size:14px;margin:6px 0}
+.mbox .stars{font-size:34px;letter-spacing:4px;margin:6px 0}
+.mbox .btnrow button{flex:1}
+.mbox ul{padding-left:18px;color:#c9d0e6;font-size:13.5px;margin:6px 0}
+.quiz{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:10px}
+.q{background:var(--panel2);border-radius:14px;padding:12px 14px}
+.q h3{font-size:14.5px;margin-bottom:8px;font-family:Inter;font-weight:600}
+.q button{display:block;width:100%;text-align:left;margin:5px 0;font-weight:500;font-size:13px;padding:8px 10px}
+.q button.right{background:#173c2f;border-color:#2c8a63}
+.q button.wrong{background:#3d1a22;border-color:#8a2c3e}
+.q .fb{font-size:12.5px;color:var(--muted);margin-top:6px;min-height:18px}
+#score{font-family:"Space Grotesk";font-weight:700;color:var(--hip)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>🧠 Neuroplasticity: How Habits Form in the Brain</h1>
+      <p>Drag the 5 neurons into the brain, pick activities and watch connections grow thicker with every repetition. Sleep to lock in what you learned – and try to build good habits before day 100.</p>
+    </div>
+    <div class="hud">
+      <div class="chip"><div class="k">Day</div><div class="v" id="dayV">1</div></div>
+      <div class="chip will" title="Energy is a game simplification – see note at the bottom."><div class="k">Energy <span id="willT"></span></div><div class="bar"><i id="willBar" style="width:100%"></i></div></div>
+      <div class="chip will time"><div class="k">Free time <span id="timeT"></span></div><div class="bar"><i id="timeBar" style="width:100%"></i></div></div>
+    </div>
+  </header>
+
+  <div class="goals" id="goals"></div>
+
+  <div class="grid">
+    <section class="card">
+      <h2>Your network</h2>
+      <p class="sub">Each orb stands for a brain region full of neurons. Drag them from the tray into the brain – and move them around however you like. The thickness of a line shows the strength of the connection.</p>
+      <svg id="net" viewBox="0 0 600 520" aria-label="Neural network">
+        <defs>
+          <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7"/></filter>
+          <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter>
+          <radialGradient id="brainFill" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#1b2550"/><stop offset="1" stop-color="#10162c"/></radialGradient>
+        </defs>
+        <g id="brain">
+          <path d="M92 250 C60 160 130 66 245 58 C300 30 385 38 432 68 C522 88 566 170 548 240 C566 304 524 362 452 372 C420 404 360 408 330 388 C290 412 220 408 190 382 C120 372 84 322 92 250 Z" fill="url(#brainFill)" stroke="#2c3a66" stroke-width="2"/>
+          <path d="M300 64 C292 120 312 170 300 220 C290 270 310 330 300 388" stroke="#25315a" stroke-width="2" fill="none" stroke-dasharray="6 8"/>
+          <path d="M160 150 C200 130 230 160 260 140 M350 120 C380 150 420 120 460 150 M150 290 C190 270 220 300 250 280 M360 300 C390 280 430 310 470 290" stroke="#202b52" stroke-width="2" fill="none"/>
+          <text x="300" y="30" text-anchor="middle" class="nrole" style="font-size:11px">BRAIN – drop here</text>
+        </g>
+        <line x1="20" y1="436" x2="580" y2="436" stroke="#243052" stroke-dasharray="4 6"/>
+        <text x="300" y="455" text-anchor="middle" class="nrole">TRAY – drag the neurons up into the brain</text>
+        <g id="edges"></g><g id="pulses"></g><g id="nodes"></g><g id="fx"></g>
+      </svg>
+      <div class="btnrow">
+        <button id="placeAll">Place all neurons</button>
+        <button id="resetBtn">Restart</button>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <section class="card">
+      <h2>The person &amp; their habits</h2>
+      <p class="sub">Every activity costs energy and time. New habits cost a lot of energy – practiced ones hardly any.</p>
+      <div class="event" id="event"></div>
+      <svg id="stage" viewBox="0 0 320 200" aria-label="Person">
+        <!-- idle -->
+        <g id="pose-idle" class="pose on"><g class="bob">
+          <circle cx="160" cy="58" r="14" class="head"/>
+          <path class="fig" d="M160 72 V122 M160 86 L140 110 M160 86 L180 110 M160 122 L147 165 M160 122 L173 165"/>
+        </g>
+          <text x="160" y="190" text-anchor="middle" fill="#8e99b9" font-size="12" font-family="Inter">Pick an activity below</text>
+        </g>
+        <!-- run -->
+        <g id="pose-laufen" class="pose">
+          <line x1="0" y1="176" x2="320" y2="176" class="ground"/>
+          <line x1="95" y1="80" x2="120" y2="80" class="speed"/>
+          <line x1="85" y1="100" x2="118" y2="100" class="speed" style="animation-delay:.2s"/>
+          <line x1="98" y1="122" x2="122" y2="122" class="speed" style="animation-delay:.4s"/>
+          <g class="runbob">
+            <circle cx="172" cy="56" r="14" class="head"/>
+            <path class="fig" d="M168 70 L158 120"/>
+            <g class="sw-a" style="transform-origin:166px 82px"><path class="fig" d="M166 82 L152 100 L162 112"/></g>
+            <g class="sw-b" style="transform-origin:166px 82px"><path class="fig" d="M166 82 L180 98 L194 92"/></g>
+            <g class="sw-a" style="transform-origin:158px 120px"><path class="fig" d="M158 120 L166 146 L156 172"/></g>
+            <g class="sw-b" style="transform-origin:158px 120px"><path class="fig" d="M158 120 L150 146 L160 172"/></g>
+          </g>
+        </g>
+        <!-- scroll -->
+        <g id="pose-scrollen" class="pose">
+          <g class="bob">
+            <circle cx="156" cy="58" r="14" class="head"/>
+            <path class="fig" d="M160 72 V122 M160 86 L144 112 M160 86 L176 104 L178 88 M160 122 L148 165 M160 122 L172 165"/>
+            <rect x="170" y="62" width="20" height="32" rx="4" fill="#0d1328" stroke="#FFC93C" stroke-width="2.5"/>
+            <clipPath id="phoneClip"><rect x="173" y="66" width="14" height="24" rx="1"/></clipPath>
+            <g clip-path="url(#phoneClip)"><g class="feed">
+              <rect x="174" y="68" width="12" height="7" rx="1" fill="#FFC93C" opacity=".8"/>
+              <rect x="174" y="78" width="12" height="2" fill="#8e99b9"/>
+              <rect x="174" y="81" width="12" height="7" rx="1" fill="#FF5A5F" opacity=".8"/>
+              <rect x="174" y="91" width="12" height="2" fill="#8e99b9"/>
+              <rect x="174" y="94" width="12" height="7" rx="1" fill="#B57BFF" opacity=".8"/>
+              <rect x="174" y="104" width="12" height="2" fill="#8e99b9"/>
+            </g></g>
+          </g>
+          <text x="200" y="60" font-size="16" class="float">❤️</text>
+          <text x="214" y="80" font-size="16" class="float" style="animation-delay:.7s">🔔</text>
+          <text x="196" y="96" font-size="16" class="float" style="animation-delay:1.4s">👍</text>
+          <text x="226" y="54" font-size="14" class="float" style="animation-delay:1.1s">😮</text>
+        </g>
+        <!-- language -->
+        <g id="pose-sprache" class="pose">
+          <g class="bob">
+            <circle cx="150" cy="58" r="14" class="head"/>
+            <path class="fig" d="M150 72 V122 M150 86 L140 104 L156 106 M150 86 L166 102 L162 108 M150 122 L138 165 M150 122 L162 165"/>
+            <path d="M144 100 L160 96 L176 100 L176 118 L160 114 L144 118 Z" fill="#3DDC97" opacity=".9"/>
+            <path d="M160 96 V114" stroke="#0a0e19" stroke-width="1.5"/>
+          </g>
+          <g>
+            <rect x="180" y="18" width="118" height="38" rx="14" fill="#1d2747" stroke="#3DDC97" stroke-width="2"/>
+            <path d="M190 54 L178 66 L200 55" fill="#1d2747" stroke="#3DDC97" stroke-width="2" stroke-linejoin="round"/>
+            <rect x="186" y="44" width="20" height="12" fill="#1d2747"/>
+            <text id="langWord" x="239" y="43" text-anchor="middle" fill="#e8ecf7" font-size="17" font-family="Space Grotesk" font-weight="700">Hello!</text>
+          </g>
+          <text x="208" y="110" font-size="14" fill="#3DDC97" class="float" font-family="Space Grotesk">Ж</text>
+          <text x="226" y="128" font-size="14" fill="#3DDC97" class="float" style="animation-delay:.8s" font-family="Space Grotesk">é</text>
+          <text x="198" y="140" font-size="14" fill="#3DDC97" class="float" style="animation-delay:1.5s" font-family="Space Grotesk">ñ</text>
+        </g>
+        <!-- meditate -->
+        <g id="pose-meditieren" class="pose">
+          <circle cx="160" cy="105" r="40" fill="none" stroke="#4C8DFF" stroke-width="2" class="ring"/>
+          <circle cx="160" cy="105" r="40" fill="none" stroke="#4C8DFF" stroke-width="2" class="ring" style="animation-delay:1.3s"/>
+          <circle cx="160" cy="105" r="40" fill="none" stroke="#B57BFF" stroke-width="2" class="ring" style="animation-delay:2.6s"/>
+          <g class="breathe">
+            <circle cx="160" cy="76" r="14" class="head"/>
+            <path class="fig" d="M160 90 V132 M160 102 L140 122 L130 140 M160 102 L180 122 L190 140"/>
+            <path class="fig" d="M122 146 Q160 126 198 146 M126 148 Q160 162 194 148"/>
+          </g>
+          <ellipse cx="160" cy="160" rx="50" ry="8" fill="#1d2747"/>
+          <text id="breathText" x="160" y="190" text-anchor="middle" fill="#8fb6ff" font-size="13" font-family="Inter">breathe in …</text>
+        </g>
+        <!-- friends -->
+        <g id="pose-freunde" class="pose">
+          <g class="wiggle" style="animation-delay:.3s">
+            <circle cx="88" cy="68" r="12" fill="#ffb3c1"/>
+            <path class="fig" style="stroke:#ffb3c1" d="M88 80 V122 M88 92 L74 112 M88 92 L104 104 M88 122 L78 160 M88 122 L98 160"/>
+          </g>
+          <g class="wiggle">
+            <circle cx="160" cy="58" r="14" class="head"/>
+            <path class="fig" d="M160 72 V122 M160 86 L144 106 M160 86 L176 106 M160 122 L148 165 M160 122 L172 165"/>
+          </g>
+          <g class="wiggle" style="animation-delay:.8s">
+            <circle cx="232" cy="66" r="12" fill="#9fd8ff"/>
+            <path class="fig" style="stroke:#9fd8ff" d="M232 78 V120 M232 90 L216 102 M232 90 L248 110 M232 120 L222 160 M232 120 L242 160"/>
+          </g>
+          <text x="112" y="44" font-size="18" class="float">😂</text>
+          <text x="186" y="36" font-size="18" class="float" style="animation-delay:.8s">❤️</text>
+          <text x="250" y="40" font-size="16" class="float" style="animation-delay:1.5s">🎉</text>
+        </g>
+      </svg>
+      <div class="caption" id="caption">Ready. The person already has a scrolling habit – everything else is new.</div>
+      <div class="acts" id="acts"></div>
+      <div class="btnrow">
+        <button class="primary" id="nextDay">🌙 Sleep → next day</button>
+        <button id="ff7">⏩ Keep this up for 7 days</button>
+        <button id="ff30">⏩ 30 days</button>
+      </div>
+      <div class="info" id="info" style="margin-top:14px"></div>
+    </section>
+  </div>
+
+  <div class="bottom">
+    <section class="card">
+      <h2>Habit strength</h2>
+      <p class="sub">Automaticity = how much the behavior happens without thinking. Set a <b>cue</b> (“when X, then I do Y”) – habits tied to a fixed cue form faster.</p>
+      <table>
+        <thead><tr><th>Activity</th><th>Automaticity</th><th>Cue</th><th>Cost</th><th>Status</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </section>
+    <section class="card">
+      <h2>Progress over the days</h2>
+      <p class="sub">The curve rises quickly at first and then flattens out – typical for habits.</p>
+      <canvas id="chart"></canvas>
+    </section>
+  </div>
+
+  <section class="card learn">
+    <h2>What happens in the brain?</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1 · HEBB’S RULE</div><h3>Neurons that fire together wire together</h3>When two neurons are repeatedly active at the same time, the synapse between them becomes more efficient (long-term potentiation, LTP): more receptors, more neurotransmitter, sometimes new contact points. That’s why the lines get thicker every time you do an activity.</div>
+      <div class="step"><div class="n">2 · MYELIN</div><h3>Highway instead of dirt road</h3>Frequently used nerve pathways get wrapped in more myelin – an insulating layer that makes signals faster and more reliable. That’s why practice makes routines smoother.</div>
+      <div class="step"><div class="n">3 · THE HANDOVER</div><h3>From boss to autopilot</h3>New behavior is controlled consciously by the prefrontal cortex – which is effortful. With every repetition the striatum (basal ganglia) takes over more. In the end a single cue is enough and the routine runs almost by itself.</div>
+      <div class="step"><div class="n">4 · THE LOOP</div><h3>Cue → routine → reward</h3>Dopamine tags what was worth it. The faster and more reliably the reward comes, the faster the habit forms. That’s why scrolling becomes a habit so much faster than running. A fixed cue (“after breakfast”) makes the loop reliable.</div>
+      <div class="step"><div class="n">5 · SLEEP</div><h3>Learning is locked in at night</h3>During sleep the brain replays what you practiced and moves it into long-term storage (consolidation). In the game, half of each day’s progress only counts after a good night’s sleep – staying up late costs you.</div>
+      <div class="step"><div class="n">6 · HOW LONG?</div><h3>66 days on average – not 21</h3>In a study from University College London (Lally et al., 2009) it took a median of 66 days for a new behavior to become automatic – anywhere from 18 to 254 days depending on the person and the behavior. Missing a single day made hardly any difference.</div>
+      <div class="step"><div class="n">7 · USE IT OR LOSE IT</div><h3>Unused paths get weaker – but never vanish</h3>Connections that go unused slowly weaken (synaptic pruning). Old habits rarely disappear completely, though – that’s why relapses are so easy. In the game, a path never drops below 40% of its peak strength.</div>
+      <div class="step"><div class="n">8 · BREAKING A HABIT</div><h3>Resisting rewires too</h3>Every time you notice an urge and don’t follow it, the PFC practices top-down control and the old loop gets a little weaker. It’s hard at first and gets easier – just like building a habit.</div>
+    </div>
+    <p class="foot"><b>About “energy”:</b> The idea that willpower is a battery that runs empty (“ego depletion”) is debated in psychology – many studies failed to replicate it. What is well established: new behaviors feel effortful because they need conscious control, and habits don’t. The energy bar is a game simplification of that. Likewise, the meditation bonus and all learning speeds are simplified. A real brain has around 86 billion neurons; each orb here stands for an entire brain region.</p>
+  </section>
+
+  <section class="card learn">
+    <h2>Test yourself <span id="score"></span></h2>
+    <div class="quiz" id="quiz"></div>
+  </section>
+</div>
+<div id="toast"></div>
+<div id="modal"><div class="mbox" id="mbox"></div></div>
+
+<script>
+(()=>{
+const NS='http://www.w3.org/2000/svg';
+const $=id=>document.getElementById(id);
+const el=(tag,attrs={},parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;};
+
+const NODES={
+  pfc:{name:'Prefrontal cortex',short:'PFC',color:'#4C8DFF',role:'Planning · Self-control',desc:'The “boss” for conscious decisions. New behavior runs through it at first – and that takes effort.'},
+  str:{name:'Reward system',short:'Striatum',color:'#FFC93C',role:'Dopamine · Autopilot',desc:'Striatum (basal ganglia) with dopamine signals. Learns what pays off and takes over well-practiced routines.'},
+  hip:{name:'Hippocampus',short:'Hippocampus',color:'#3DDC97',role:'Learning · Memory',desc:'Stores new things: vocabulary, routes, experiences. Endurance exercise promotes new connections here.'},
+  mot:{name:'Motor cortex',short:'Motor',color:'#FF5A5F',role:'Movement',desc:'Plans and controls movement – from running strides to your thumb while scrolling.'},
+  amy:{name:'Amygdala',short:'Amygdala',color:'#B57BFF',role:'Emotion · Stress · Social',desc:'Evaluates feelings, danger and social signals. Gets calmed down by the PFC.'}
+};
+const ORDER=['pfc','str','hip','mot','amy'];
+const HOME={pfc:{x:170,y:150},mot:{x:440,y:130},str:{x:300,y:250},amy:{x:180,y:330},hip:{x:430,y:335}};
+const TRAY_Y=490, DROP_LIMIT=430;
+const trayPos=i=>({x:75+i*112,y:TRAY_Y});
+
+const ACTS={
+  laufen:{label:'Go running',emoji:'🏃',main:'mot',base:45,k:0.022,time:1,
+    path:[['pfc','mot'],['mot','hip'],['hip','str']],
+    title:'Running: movement rebuilds the brain',
+    brain:[['pfc','PFC → motor cortex: At first you have to consciously push yourself (“shoes on, out the door!”). That’s the effortful part.'],
+      ['mot','Motor cortex → hippocampus: Endurance exercise raises BDNF, a growth factor that acts like fertilizer for synapses – especially in the hippocampus.'],
+      ['str','Hippocampus → reward system: The run gets linked to the good feeling afterwards (dopamine, endocannabinoids). But the reward comes late – so this habit forms slowly.']],
+    habit:'High effort + late reward: one of the slower habits. Tip: start tiny (5 minutes) and set a fixed cue.'},
+  scrollen:{label:'Scrolling',emoji:'📱',main:'str',base:3,k:0.12,time:0.5,
+    path:[['mot','str'],['str','amy'],['amy','str'],['str','mot']],
+    title:'Scrolling: the fastest loop in the brain',
+    brain:[['mot','Thumb (motor cortex) ↔ reward system: a tiny, super-fast loop.'],
+      ['str','Every new post is a surprise. Unpredictable rewards trigger especially strong dopamine signals – the slot machine principle.'],
+      ['amy','The amygdala reacts to likes, faces and outrage.'],
+      ['pfc','The PFC is barely involved – that’s why scrolling takes almost no effort and becomes automatic incredibly fast. It also eats your free time.']],
+    habit:'Neuroplasticity is neutral: it strengthens anything that happens often with an instant reward – including habits you never wanted. Watch for phone urges and try resisting them.'},
+  sprache:{label:'Learn a language',emoji:'🗣️',main:'hip',base:40,k:0.018,time:1,
+    path:[['pfc','hip'],['hip','pfc'],['pfc','str']],
+    title:'Learning a language: working memory at full throttle',
+    brain:[['pfc','PFC ↔ hippocampus: The PFC holds new words in working memory, the hippocampus stores them. Back and forth, over and over.'],
+      ['hip','During sleep the new words get moved into long-term storage (consolidation) – so sleep after studying really matters.'],
+      ['str','PFC → reward system: Small wins (“I understood that!”) release dopamine and tag the learning as worthwhile.']],
+    habit:'The slowest habit in the game because it needs a lot of conscious work. Spaced repetition – a little every day – beats cramming.'},
+  meditieren:{label:'Meditate',emoji:'🧘',main:'pfc',base:30,k:0.025,time:0.5,
+    path:[['pfc','amy'],['amy','pfc'],['pfc','amy']],
+    title:'Meditation: the PFC calms the amygdala',
+    brain:[['pfc','PFC → amygdala: observing feelings instead of reacting right away – the technical term is “top-down regulation”.'],
+      ['amy','Studies of multi-week mindfulness courses found a calmer stress response in the amygdala.'],
+      ['pfc','Every time your mind wanders and you return to your breath, that’s one repetition – the same skill you need to resist an urge.']],
+    habit:'In the game, a meditation habit makes resisting phone urges cheaper and softens stressful days (simplified).'},
+  freunde:{label:'Meet friends',emoji:'🤝',main:'amy',base:18,k:0.028,time:2,
+    path:[['amy','hip'],['hip','amy'],['amy','str']],
+    title:'Meeting friends: the social brain',
+    brain:[['amy','The amygdala reads other people’s faces, voices and emotions.'],
+      ['hip','The hippocampus stores shared experiences – emotional moments are remembered especially well.'],
+      ['str','Closeness and laughter release oxytocin and dopamine – the reward system fires immediately. Social bonds buffer stress.']],
+    habit:'Instant, natural reward → forms fairly easily. The hurdle is time and planning more than effort.'}
+};
+const ACT_IDS=Object.keys(ACTS), GOOD=['laufen','sprache','meditieren','freunde'];
+const CUES=['','After breakfast','After school/work','Before dinner','Before bed'];
+const W0=0.12, LR=0.045, FREE=5, MAX_LATE=2, GOAL_DAY=100, WIN_A=0.8, SCROLL_MAX=0.5;
+const ekey=(a,b)=>ORDER.indexOf(a)<ORDER.indexOf(b)?a+'|'+b:b+'|'+a;
+const SCROLL_EDGES=[ekey('mot','str'),ekey('str','amy')];
+
+let S;
+function fresh(){
+  const pos={},placed={};
+  ORDER.forEach((id,i)=>{pos[id]=trayPos(i);placed[id]=false;});
+  const w={},peak={};
+  for(let i=0;i<ORDER.length;i++)for(let j=i+1;j<ORDER.length;j++){const k=ekey(ORDER[i],ORDER[j]);w[k]=W0;peak[k]=W0;}
+  SCROLL_EDGES.forEach(k=>{w[k]=0.42;peak[k]=0.42;});
+  const habits={};
+  ACT_IDS.forEach(id=>habits[id]={A:0,peak:0,reps:0,done:0,pending:0,cue:'',hist:[0]});
+  habits.scrollen.A=0.35;habits.scrollen.peak=0.35;habits.scrollen.hist=[0.35];
+  return {day:1,energy:100,maxEnergy:100,time:FREE,pos,placed,w,peak,habits,usedToday:new Set(),today:[],lastDay:[],
+    current:null,busy:false,glow:{},urges:0,resisted:0,gaveIn:0,stress:false,event:null,won:false,ended:false,wonDay:null,modal:false};
+}
+S=fresh();
+
+/* ---------- Network SVG ---------- */
+const svg=$('net'), gE=$('edges'), gN=$('nodes'), gP=$('pulses'), gFx=$('fx');
+const defs=svg.querySelector('defs');
+const edgeEls={};
+function buildEdges(){
+  gE.innerHTML='';
+  for(const k in S.w){
+    const [a,b]=k.split('|');
+    let grad=document.getElementById('g-'+a+'-'+b);
+    if(!grad){
+      grad=el('linearGradient',{id:'g-'+a+'-'+b,gradientUnits:'userSpaceOnUse'},defs);
+      el('stop',{offset:'0','stop-color':NODES[a].color},grad);
+      el('stop',{offset:'1','stop-color':NODES[b].color},grad);
+    }
+    const g=el('g',{},gE);
+    const glow=el('line',{stroke:'url(#g-'+a+'-'+b+')','stroke-linecap':'round',filter:'url(#soft)',opacity:0},g);
+    const line=el('line',{stroke:'url(#g-'+a+'-'+b+')','stroke-linecap':'round'},g);
+    const t=el('title',{},line);
+    edgeEls[k]={g,glow,line,grad,t,a,b,flash:0};
+  }
+}
+const nodeEls={};
+function buildNodes(){
+  gN.innerHTML='';
+  ORDER.forEach(id=>{
+    const n=NODES[id];
+    const g=el('g',{class:'node'},gN);
+    const halo=el('circle',{r:34,fill:n.color,opacity:.25,filter:'url(#glow)'},g);
+    for(let i=0;i<7;i++){
+      const ang=i/7*Math.PI*2+0.3;
+      const x2=Math.cos(ang)*(31+(i%2)*5),y2=Math.sin(ang)*(31+(i%2)*5);
+      el('path',{d:`M${Math.cos(ang)*16} ${Math.sin(ang)*16} Q${Math.cos(ang+.25)*24} ${Math.sin(ang+.25)*24} ${x2} ${y2}`,stroke:n.color,'stroke-width':2.5,fill:'none','stroke-linecap':'round',opacity:.85},g);
+    }
+    el('circle',{r:20,fill:n.color},g);
+    el('circle',{r:8,fill:'#ffffff',opacity:.35},g);
+    const lab=el('text',{y:48,'text-anchor':'middle',class:'nlabel'},g);
+    const role=el('text',{y:62,'text-anchor':'middle',class:'nrole'},g);role.textContent=n.role;
+    nodeEls[id]={g,halo,lab,role};
+    g.addEventListener('pointerdown',e=>startDrag(e,id));
+  });
+}
+function svgPt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse());}
+let drag=null;
+function startDrag(e,id){
+  e.preventDefault();
+  const p=svgPt(e);
+  drag={id,dx:S.pos[id].x-p.x,dy:S.pos[id].y-p.y};
+  const G=nodeEls[id].g;
+  G.setPointerCapture(e.pointerId);
+  gN.appendChild(G);
+  const mv=ev=>{if(!drag)return;const q=svgPt(ev);S.pos[id]={x:Math.max(30,Math.min(570,q.x+drag.dx)),y:Math.max(30,Math.min(500,q.y+drag.dy))};};
+  const up=()=>{
+    G.removeEventListener('pointermove',mv);G.removeEventListener('pointerup',up);G.removeEventListener('pointercancel',up);
+    drag=null;
+    const wasPlaced=S.placed[id];
+    if(S.pos[id].y<DROP_LIMIT){S.placed[id]=true; if(!wasPlaced){ripple(id);toast(`${NODES[id].name} placed – ${NODES[id].desc}`);} }
+    else {S.placed[id]=false;S.pos[id]=trayPos(ORDER.indexOf(id));}
+    if(!wasPlaced && ORDER.every(n=>S.placed[n])) setTimeout(()=>toast('All 5 neurons are in the brain. Now pick an activity! 👉'),1800);
+    renderActs();
+  };
+  G.addEventListener('pointermove',mv);G.addEventListener('pointerup',up);G.addEventListener('pointercancel',up);
+}
+const allPlaced=()=>ORDER.every(n=>S.placed[n]);
+
+/* pulses & effects */
+const pulses=[], ripples=[], floats=[];
+function ripple(id){ripples.push({id,t0:performance.now()});}
+function floatText(x,y,txt,color){
+  const t=el('text',{x,y,'text-anchor':'middle','font-size':13,'font-weight':700,'font-family':'Space Grotesk',class:'nlabel'},gFx);
+  t.textContent=txt; t.style.fill=color;
+  floats.push({el:t,x,y,t0:performance.now()});
+}
+const pulsePool=[];
+function getPulse(i){
+  if(!pulsePool[i]){
+    const g=el('g',{},gP);
+    const halo=el('circle',{r:12,filter:'url(#glow)'},g);
+    const c=el('circle',{r:5.5,fill:'#fff'},g);
+    pulsePool[i]={g,halo,c};
+  }
+  return pulsePool[i];
+}
+function frame(now){
+  for(const k in edgeEls){
+    const E=edgeEls[k], a=S.pos[E.a], b=S.pos[E.b];
+    const vis=S.placed[E.a]&&S.placed[E.b];
+    E.g.style.display=vis?'':'none';
+    if(!vis)continue;
+    const w=S.w[k];
+    for(const L of [E.line,E.glow]){L.setAttribute('x1',a.x);L.setAttribute('y1',a.y);L.setAttribute('x2',b.x);L.setAttribute('y2',b.y);}
+    E.grad.setAttribute('x1',a.x);E.grad.setAttribute('y1',a.y);E.grad.setAttribute('x2',b.x);E.grad.setAttribute('y2',b.y);
+    const sw=1.2+w*15;
+    E.line.setAttribute('stroke-width',sw);
+    E.line.setAttribute('opacity',(0.18+0.75*w+E.flash*0.3).toFixed(3));
+    E.glow.setAttribute('stroke-width',sw+10);
+    E.glow.setAttribute('opacity',(E.flash*0.7+w*0.15).toFixed(3));
+    E.flash*=0.96;
+    E.t.textContent=`${NODES[E.a].name} ↔ ${NODES[E.b].name}: strength ${Math.round(w*100)}%`;
+  }
+  ORDER.forEach(id=>{
+    const N=nodeEls[id], p=S.pos[id];
+    N.g.setAttribute('transform',`translate(${p.x},${p.y})`);
+    const inTray=!S.placed[id];
+    N.role.style.display=inTray?'none':'';
+    N.lab.textContent=inTray?NODES[id].short:NODES[id].name;
+    const gl=S.glow[id]||0;
+    N.halo.setAttribute('opacity',(0.22+gl*0.75).toFixed(3));
+    N.halo.setAttribute('r',34+gl*14);
+    S.glow[id]=gl*0.95;
+  });
+  let used=0;
+  for(let i=pulses.length-1;i>=0;i--){
+    const P=pulses[i]; const t=(now-P.t0)/P.dur;
+    if(t<0)continue;
+    if(t>=1){ if(P.onArrive)P.onArrive(); pulses.splice(i,1); continue; }
+    const a=S.pos[P.a], b=S.pos[P.b];
+    const e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+    const g=getPulse(used++);
+    g.g.style.display='';
+    g.g.setAttribute('transform',`translate(${a.x+(b.x-a.x)*e},${a.y+(b.y-a.y)*e})`);
+    g.g.setAttribute('opacity',P.alpha);
+    g.halo.setAttribute('fill',P.color);
+    g.c.setAttribute('r',P.size);
+  }
+  for(let i=used;i<pulsePool.length;i++)pulsePool[i].g.style.display='none';
+  gFx.querySelectorAll('.rip').forEach(r=>r.remove());
+  for(let i=ripples.length-1;i>=0;i--){
+    const R=ripples[i], t=(now-R.t0)/700;
+    if(t>=1){ripples.splice(i,1);continue;}
+    const p=S.pos[R.id];
+    el('circle',{class:'rip',cx:p.x,cy:p.y,r:22+t*40,fill:'none',stroke:NODES[R.id].color,'stroke-width':3*(1-t),opacity:1-t},gFx);
+  }
+  for(let i=floats.length-1;i>=0;i--){
+    const F=floats[i], t=(now-F.t0)/1300;
+    if(t>=1){F.el.remove();floats.splice(i,1);continue;}
+    F.el.setAttribute('y',F.y-t*28);F.el.setAttribute('opacity',1-t*t);
+  }
+  requestAnimationFrame(frame);
+}
+
+/* ---------- Game model ---------- */
+const floorW=k=>Math.max(W0,0.4*S.peak[k]);
+function cost(id){return Math.max(1,Math.round(ACTS[id].base*(1-0.85*S.habits[id].A)));}
+function resistCost(){const As=S.habits.scrollen.A,Am=S.habits.meditieren.A;return Math.max(3,Math.round((10+30*As)*(1-0.5*Am)));}
+function urgeChance(){return Math.min(0.85,(0.2+0.6*S.habits.scrollen.A)*(S.stress?1.5:1));}
+function cueMult(id){return S.habits[id].cue?1.2:1;}
+function strengthen(a,b,lr){
+  const k=ekey(a,b); S.w[k]+=lr*(1-S.w[k]); S.peak[k]=Math.max(S.peak[k],S.w[k]); S.usedToday.add(k); return k;
+}
+function timeCheck(id){
+  const t=ACTS[id].time;
+  if(S.time-t < -MAX_LATE) return 'none';
+  if(S.time-t < 0) return 'late';
+  return 'ok';
+}
+function applyHabit(id){
+  const h=S.habits[id], act=ACTS[id];
+  const rep=h.done>0;
+  const gain=act.k*cueMult(id)*(rep?0.35:1)*(1-h.A-h.pending);
+  h.A+=gain*0.5; h.pending+=gain*0.5; h.peak=Math.max(h.peak,h.A);
+  h.done++; h.reps++;
+  S.energy-=cost(id)===0?0:0; // cost already paid by caller
+  S.time-=act.time;
+  if(!S.today.includes(id))S.today.push(id);
+  return {gain,rep};
+}
+function doActivity(id,forced){
+  if(S.busy||S.ended||S.modal&&!forced)return;
+  const act=ACTS[id], h=S.habits[id];
+  if(!allPlaced()){
+    const missing=[...new Set(act.path.flat())].filter(n=>!S.placed[n]);
+    if(missing.length){toast(`First drag these neurons into the brain: ${missing.map(n=>NODES[n].name).join(', ')}`);return;}
+  }
+  if(id!=='scrollen' && h.done){toast(`${act.emoji} Already done today. Half of today’s progress gets locked in tonight during sleep → “next day”.`);return;}
+  const c=cost(id);
+  if(!forced && c>S.energy){
+    let msg=`😮‍💨 Not enough energy (needs ${c}, ${S.energy} left). New habits are effortful – that’s why they so often fail at the end of a long day.`;
+    if(S.energy>=cost('scrollen')) msg+=' Irony: there’s still plenty left for scrolling.';
+    toast(msg);return;
+  }
+  const tc=timeCheck(id);
+  if(tc==='none'){toast('🕛 It’s way too late – time to sleep.');return;}
+  const before=h.A;
+  S.energy=Math.max(0,S.energy-c);
+  const {gain,rep}=applyHabit(id);
+  if(tc==='late') toast(`🌙 That cut into your sleep (${(-S.time).toFixed(1)}h). Tonight’s consolidation will be weaker and you’ll start tomorrow tired.`);
+  S.current=id;
+  setPose(id); renderInfo(id); renderAll();
+  S.busy=true; renderActs();
+  const now=performance.now(), step=650, pfcLoad=1-0.8*before;
+  S.glow[act.path[0][0]]=1; ripple(act.path[0][0]);
+  const lr=LR*cueMult(id)*(rep?0.5:1);
+  act.path.forEach(([a,b],i)=>{
+    const touchesPfc=(a==='pfc'||b==='pfc');
+    const alpha=touchesPfc?(0.3+0.7*pfcLoad):1;
+    for(let j=0;j<3;j++){
+      pulses.push({a,b,t0:now+i*step+j*110,dur:600,color:NODES[a].color,alpha,size:j===0?6:4,
+        onArrive:j===0?()=>{
+          const k=ekey(a,b), wb=S.w[k];
+          strengthen(a,b,lr);
+          edgeEls[k].flash=1; S.glow[b]=Math.max(S.glow[b]||0,touchesPfc?alpha:1); ripple(b);
+          const pa=S.pos[a],pb=S.pos[b];
+          floatText((pa.x+pb.x)/2,(pa.y+pb.y)/2-8,'+'+Math.max(1,Math.round((S.w[k]-wb)*100))+'%',NODES[b].color);
+        }:null});
+    }
+  });
+  setTimeout(()=>{
+    S.busy=false;
+    $('caption').textContent=`${act.emoji} ${act.label} done (−${c} energy, −${act.time}h). Automaticity ${Math.round(before*100)}% → ${Math.round(h.A*100)}% now, +${Math.round(gain*50)}% more after a good night’s sleep.`;
+    renderAll(); checkWin();
+    if(id!=='scrollen' && !S.modal && !S.ended) maybeUrge();
+  },act.path.length*step+500);
+}
+
+/* urges */
+function maybeUrge(){
+  if(S.urges>=2||S.ended||S.modal)return;
+  if(Math.random()<urgeChance()) setTimeout(showUrge,500);
+}
+function showUrge(){
+  if(S.modal||S.ended)return;
+  S.urges++;
+  const rc=resistCost(), can=S.energy>=rc, As=S.habits.scrollen.A;
+  openModal(`<h2>📱 Bzzz… your phone buzzes</h2>
+    <p>The scroll loop fires on its own – that’s what a habit does. Scroll autopilot: <b>${Math.round(As*100)}%</b>.${S.stress?' Stress makes urges stronger today.':''}</p>
+    <p>Resisting means your PFC has to step in. It costs <b>${rc} energy</b> (you have ${S.energy}).${S.habits.meditieren.A>0.2?' Your meditation habit makes this cheaper.':''}</p>
+    <div class="btnrow"><button class="primary" id="uRes" ${can?'':'disabled'}>💪 Resist (−${rc} ⚡)</button><button id="uGive">😅 Give in (scroll)</button></div>
+    ${can?'':'<p style="font-size:12.5px;color:#ffb0bb">Not enough energy left to resist.</p>'}`);
+  $('uRes').onclick=()=>{closeModal();resist(true);};
+  $('uGive').onclick=()=>{closeModal();giveIn(true);};
+}
+function resist(animate){
+  const rc=resistCost(); if(S.energy<rc)return false;
+  S.energy-=rc; S.resisted++;
+  const h=S.habits.scrollen, fA=0.4*h.peak;
+  h.A-=0.07*(h.A-fA);
+  SCROLL_EDGES.forEach(k=>{S.w[k]-=0.05*(S.w[k]-floorW(k));});
+  strengthen('pfc','str',0.03);
+  if(animate){
+    const now=performance.now();
+    for(let j=0;j<3;j++)pulses.push({a:'pfc',b:'str',t0:now+j*110,dur:600,color:NODES.pfc.color,alpha:1,size:j?4:6,onArrive:j?null:()=>{ripple('str');S.glow.str=1;edgeEls[ekey('pfc','str')].flash=1;floatText(S.pos.str.x,S.pos.str.y-36,'STOP','#4C8DFF');}});
+    SCROLL_EDGES.forEach(k=>{const [a,b]=k.split('|');const pa=S.pos[a],pb=S.pos[b];floatText((pa.x+pb.x)/2,(pa.y+pb.y)/2-8,'−weaker','#ff8a93');});
+    $('caption').textContent=`💪 Resisted! The PFC stepped in (blue signal to the reward system) and the scroll loop got a bit weaker. Scroll autopilot: ${Math.round(h.A*100)}%.`;
+    renderAll(); checkWin();
+  }
+  return true;
+}
+function giveIn(animate){
+  S.gaveIn++;
+  if(animate){doActivity('scrollen',true);return;}
+  const tc=timeCheck('scrollen'); if(tc==='none')return;
+  S.energy=Math.max(0,S.energy-cost('scrollen'));
+  applyHabit('scrollen');
+  ACTS.scrollen.path.forEach(([a,b])=>strengthen(a,b,LR));
+}
+
+/* days */
+function endDay(){
+  const over=Math.max(0,-S.time);
+  const sleepF=1-0.25*over;
+  for(const k in S.w){ if(!S.usedToday.has(k)) S.w[k]-=0.02*(S.w[k]-floorW(k)); }
+  ACT_IDS.forEach(id=>{const h=S.habits[id];
+    h.A+=h.pending*sleepF; h.pending=0; h.peak=Math.max(h.peak,h.A);
+    if(!h.done) h.A-=0.015*(h.A-0.4*h.peak);
+    h.hist.push(h.A); h.done=0;});
+  S.lastDay=S.today.length?[...S.today]:S.lastDay;
+  S.today=[]; S.usedToday=new Set(); S.urges=0;
+  S.day++;
+  const Am=S.habits.meditieren.A;
+  let maxE=100-15*over;
+  S.stress=false; S.event=null;
+  const r=Math.random();
+  if(r<0.07){maxE=Math.min(maxE,55);S.event='🤒 You woke up sick. Very little energy today – a missed day barely matters for long-term habits, so don’t panic.';}
+  else if(r<0.19){S.stress=true;maxE-=Math.round(25*(1-0.6*Am));S.event=`😫 Stressful day (exam/deadline). Less energy and stronger phone urges.${Am>0.3?' Your meditation habit softens the stress.':''}`;}
+  else if(over>0){S.event=`🥱 You stayed up ${over.toFixed(1)}h too late: only ${Math.round(sleepF*100)}% of yesterday’s progress got consolidated, and you start tired.`;}
+  S.maxEnergy=Math.max(30,maxE); S.energy=S.maxEnergy; S.time=FREE;
+  if(S.day>GOAL_DAY){S.ended=true;S.day=GOAL_DAY;}
+  return over;
+}
+function nextDay(){
+  if(S.busy||S.ended||S.modal)return;
+  const did=S.today.length;
+  endDay();
+  setPose(null);
+  $('caption').textContent=did?'🌙 Slept. During sleep, yesterday’s practice gets consolidated. Unused paths weaken slightly.':'🌙 A day without practice – unused connections get a little weaker (but never vanish).';
+  renderAll();
+  if(S.ended){showEnd();return;}
+  checkWin();
+  if(!S.modal) maybeUrge();
+}
+function quickDo(id){
+  const h=S.habits[id];
+  if(h.done && id!=='scrollen')return false;
+  const c=cost(id); if(c>S.energy)return false;
+  if(timeCheck(id)!=='ok')return false;
+  S.energy-=c; const {rep}=applyHabit(id);
+  ACTS[id].path.forEach(([a,b])=>strengthen(a,b,LR*cueMult(id)*(rep?0.5:1)));
+  return true;
+}
+function fastForward(n){
+  if(S.busy||S.ended||S.modal)return;
+  if(!allPlaced()){toast('Place all neurons first.');return;}
+  const plan=S.today.length?[...S.today]:[...S.lastDay];
+  if(!plan.length){toast('Do a few activities today first – then I’ll repeat exactly those every day.');return;}
+  const failed={}; let res=0,give=0,sick=0,stress=0,days=0; const wasWon=S.won;
+  for(let i=0;i<n;i++){
+    endDay(); if(S.ended)break; days++;
+    if(S.event&&S.event.startsWith('🤒'))sick++; if(S.stress)stress++;
+    const urge=()=>{ if(Math.random()<urgeChance()){ if(resist(false))res++; else {giveIn(false);give++;} } };
+    urge();
+    plan.slice().sort((a,b)=>cost(a)-cost(b)).forEach(id=>{if(!quickDo(id))failed[id]=(failed[id]||0)+1;});
+    urge();
+    S.urges=2;
+    if(!wasWon && isWin()) break;
+  }
+  const fails=Object.entries(failed).map(([id,c])=>`${ACTS[id].emoji} ${c}×`).join(', ');
+  $('caption').textContent=`⏩ ${days} days of: ${plan.map(id=>ACTS[id].emoji).join(' ')}. Phone urges: ${res} resisted, ${give} gave in. Sick days: ${sick}, stressful days: ${stress}.`+(fails?` Skipped (no energy/time): ${fails}.`:'');
+  S.current=plan[0];setPose(plan[0]);renderInfo(plan[0]);renderAll();
+  ORDER.forEach(id=>{S.glow[id]=1;ripple(id);});
+  if(S.ended){showEnd();return;}
+  checkWin();
+}
+
+/* win / end */
+const formed=()=>GOOD.filter(id=>S.habits[id].A>=WIN_A);
+const isWin=()=>formed().length>=3 && S.habits.scrollen.A<SCROLL_MAX;
+function stars(){const f=formed().length;return isWin()?1+(f===4?1:0)+(S.habits.scrollen.A<0.25?1:0):0;}
+function starStr(n){return '★'.repeat(n)+'<span style="opacity:.25">'+'★'.repeat(3-n)+'</span>';}
+function checkWin(){
+  if(!S.won && isWin()){
+    S.won=true; S.wonDay=S.day;
+    const st=stars();
+    openModal(`<h2>🏆 You won on day ${S.day}!</h2><div class="stars">${starStr(st)}</div>
+      <p>${formed().map(id=>ACTS[id].emoji+' '+ACTS[id].label).join(', ')} now run${formed().length>1?'':'s'} on autopilot, and the scroll habit is under control (${Math.round(S.habits.scrollen.A*100)}%).</p>
+      <p>That’s neuroplasticity: the same brain, rewired by repetition. (Real-life average: about 66 days.)</p>
+      <ul><li>★ Win: 3 good habits ≥80% + scrolling under 50%</li><li>★ All 4 good habits formed</li><li>★ Scrolling autopilot under 25%</li></ul>
+      <div class="btnrow"><button class="primary" id="mKeep">Keep playing to day ${GOAL_DAY}</button><button id="mRe">Restart</button></div>`);
+    $('mKeep').onclick=closeModal; $('mRe').onclick=()=>{closeModal();restart();};
+  }
+}
+function showEnd(){
+  renderAll();
+  const f=formed(), st=stars();
+  const tips=['Set a cue for every habit – it speeds things up by about 20% in the game.','Start with 2 habits, add more once they get cheap.','Resist phone urges early, while the scroll loop is still weak.','Don’t stay up late – sleep locks in half of each day’s progress.'];
+  const win=S.won||isWin();
+  openModal(win?`<h2>🏁 Day ${GOAL_DAY} – final result</h2><div class="stars">${starStr(st)}</div>
+      <p>You won${S.wonDay?` on day ${S.wonDay}`:''}. Formed habits: ${f.map(id=>ACTS[id].emoji).join(' ')||'–'} · Scrolling: ${Math.round(S.habits.scrollen.A*100)}% · Urges resisted: ${S.resisted}.</p>
+      <div class="btnrow"><button class="primary" id="mRe">Play again</button></div>`
+    :`<h2>⏰ Day ${GOAL_DAY} – time’s up</h2>
+      <p>Formed habits: <b>${f.length}/3</b> ${f.map(id=>ACTS[id].emoji).join(' ')} · Scrolling autopilot: <b>${Math.round(S.habits.scrollen.A*100)}%</b> (goal: under 50%).</p>
+      <p>Building habits really is this hard – in real life too. Tips for the next round:</p><ul>${tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+      <div class="btnrow"><button class="primary" id="mRe">Try again</button></div>`);
+  $('mRe').onclick=()=>{closeModal();restart();};
+}
+function openModal(html){$('mbox').innerHTML=html;$('modal').classList.add('show');S.modal=true;renderActs();}
+function closeModal(){$('modal').classList.remove('show');S.modal=false;renderActs();}
+function restart(){pulses.length=0;S=fresh();setPose(null);renderInfo(null);$('caption').textContent='Restarted. The person already has a scrolling habit – everything else is new.';renderAll();}
+
+/* ---------- Rendering ---------- */
+function renderLegend(){
+  $('legend').innerHTML=ORDER.map(id=>`<div class="lg"><span class="dot" style="background:${NODES[id].color};color:${NODES[id].color}"></span><div><b>${NODES[id].name}</b>${NODES[id].desc}</div></div>`).join('');
+}
+function renderActs(){
+  const lock=S.busy||S.modal||S.ended;
+  $('acts').innerHTML=ACT_IDS.map(id=>{
+    const a=ACTS[id],h=S.habits[id];
+    return `<button class="act${h.done?' done':''}${S.current===id?' active':''}" style="--c:${NODES[a.main].color}" data-id="${id}" ${lock?'disabled':''}>
+      <span class="em">${a.emoji}</span><span class="nm">${a.label}${h.cue?' 🔗':''}</span><span class="cost">−${cost(id)}⚡ · ${a.time}h</span></button>`;
+  }).join('');
+  $('acts').querySelectorAll('.act').forEach(b=>b.onclick=()=>doActivity(b.dataset.id));
+  ['nextDay','ff7','ff30'].forEach(i=>$(i).disabled=lock);
+}
+function renderHud(){
+  $('dayV').textContent=S.day+'/'+GOAL_DAY;
+  $('willT').textContent=`${S.energy}/${S.maxEnergy}`;
+  $('willBar').style.width=(S.energy/S.maxEnergy*100)+'%';
+  $('timeT').textContent=S.time>=0?`${S.time}h left`:`${(-S.time)}h of sleep lost`;
+  $('timeBar').style.width=Math.max(0,S.time/FREE*100)+'%';
+  const ev=$('event'); ev.style.display=S.event?'block':'none'; ev.textContent=S.event||'';
+}
+function renderGoals(){
+  const f=formed().length, sc=S.habits.scrollen.A;
+  $('goals').innerHTML=`<span class="gt">🎯 Goal by day ${GOAL_DAY}:</span>
+    <span class="gchip ${f>=3?'ok':''}">Good habits formed (≥80%): ${f}/3</span>
+    <span class="gchip ${sc<SCROLL_MAX?'ok':'bad'}">📱 Scroll autopilot: ${Math.round(sc*100)}% (keep under 50%)</span>
+    <span class="gchip">💪 Urges resisted: ${S.resisted} · 😅 gave in: ${S.gaveIn}</span>
+    ${S.won?'<span class="gchip ok">🏆 Won on day '+S.wonDay+'</span>':''}`;
+}
+function statusOf(id){
+  const A=S.habits[id].A;
+  if(id==='scrollen') return A<SCROLL_MAX?'<span class="tag auto">under control</span>':'<span class="tag" style="background:#3d1a22;color:#ffb0bb">runs your day</span>';
+  if(A>=WIN_A)return '<span class="tag auto">Formed ✓</span>';
+  if(A>=0.5)return '<span class="tag">almost there</span>';
+  if(A>=0.2)return '<span class="tag">getting easier</span>';
+  if(A>0)return '<span class="tag">new & hard</span>';
+  return '<span class="tag">never done</span>';
+}
+function renderTable(){
+  $('tbody').innerHTML=ACT_IDS.map(id=>{
+    const a=ACTS[id],h=S.habits[id],col=NODES[a.main].color;
+    const pend=h.pending>0.001?` <span style="color:#8fb6ff">(+${Math.round(h.pending*100)}% tonight)</span>`:'';
+    const cue=id==='scrollen'?'<span style="font-size:11.5px;color:var(--muted)">phone buzz</span>'
+      :`<select data-cue="${id}">${CUES.map(c=>`<option value="${c}" ${h.cue===c?'selected':''}>${c||'– no cue –'}</option>`).join('')}</select>`;
+    return `<tr><td>${a.emoji} ${a.label}</td>
+      <td><div class="bar"><i style="width:${(h.A*100).toFixed(1)}%;background:${col}"></i></div><span style="font-size:11px;color:var(--muted)">${Math.round(h.A*100)}%${pend}</span></td>
+      <td>${cue}</td><td>${cost(id)}⚡</td><td>${statusOf(id)}</td></tr>`;
+  }).join('');
+  $('tbody').querySelectorAll('select').forEach(s=>s.onchange=()=>{
+    const id=s.dataset.cue; S.habits[id].cue=s.value;
+    if(s.value)toast(`🔗 “${s.value} → ${ACTS[id].label.toLowerCase()}”. A fixed cue makes the loop reliable – this habit now forms faster.`);
+    renderActs();
+  });
+}
+function renderInfo(id){
+  const box=$('info');
+  if(!id){
+    box.innerHTML=`<h3>How to play</h3><ul>
+      <li style="--c:#4C8DFF">Drag the 5 colored neurons from the tray into the brain (or click “Place all neurons”).</li>
+      <li style="--c:#FFC93C">Click an activity: signals fire through the network and the connections used get thicker.</li>
+      <li style="--c:#3DDC97">Each day you have limited energy and 5 hours of free time. New habits are expensive – at first, not all of them fit into a day.</li>
+      <li style="--c:#B57BFF">Your phone will buzz. Resist the urge (costs energy) or give in (strengthens the scroll loop).</li>
+      <li style="--c:#FF5A5F">Sleep to lock in progress. Set cues in the table below. 🎯 Win: 3 good habits at 80%+ and scrolling under 50% before day ${GOAL_DAY}.</li></ul>`;
+    return;
+  }
+  const a=ACTS[id],h=S.habits[id],col=NODES[a.main].color;
+  const pfc=Math.round((1-0.85*h.A)*100);
+  box.innerHTML=`<h3>${a.emoji} ${a.title}</h3><ul>${a.brain.map(([n,t])=>`<li style="--c:${NODES[n].color}">${t}</li>`).join('')}</ul>
+    <div class="habitnote" style="--c:${col}"><b>Habit:</b> ${a.habit}</div>
+    <div class="control">Who’s in control right now?
+      <div class="bar"><i style="width:${pfc}%;background:#4C8DFF"></i><i style="width:${100-pfc}%;background:#FFC93C"></i></div>
+      <div class="ends"><span>🔵 PFC – conscious, effortful (${pfc}%)</span><span>Striatum – autopilot (${100-pfc}%) 🟡</span></div></div>`;
+}
+function setPose(id){
+  document.querySelectorAll('#stage .pose').forEach(p=>p.classList.remove('on'));
+  $('pose-'+(id||'idle')).classList.add('on');
+}
+const chart=$('chart');
+function drawChart(){
+  const dpr=window.devicePixelRatio||1, W=chart.clientWidth, H=chart.clientHeight;
+  chart.width=W*dpr; chart.height=H*dpr;
+  const c=chart.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,W,H);
+  const L=36,R=12,T=12,B=26, maxD=GOAL_DAY;
+  const X=d=>L+(W-L-R)*d/maxD, Y=v=>T+(H-T-B)*(1-v);
+  c.font='11px Inter, sans-serif'; c.fillStyle='#8e99b9'; c.strokeStyle='#1e2846'; c.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(v=>{c.beginPath();c.moveTo(L,Y(v));c.lineTo(W-R,Y(v));c.stroke();c.fillText(Math.round(v*100)+'%',4,Y(v)+4);});
+  for(let d=0;d<=maxD;d+=20){c.fillText(d,X(d)-4,H-8);}
+  c.setLineDash([4,4]); c.strokeStyle='#5d6a92';
+  c.beginPath();c.moveTo(X(66),T);c.lineTo(X(66),H-B);c.stroke();
+  c.beginPath();c.moveTo(L,Y(WIN_A));c.lineTo(W-R,Y(WIN_A));c.stroke();
+  c.strokeStyle='#6b2c3a';c.beginPath();c.moveTo(L,Y(SCROLL_MAX));c.lineTo(W-R,Y(SCROLL_MAX));c.stroke();
+  c.setLineDash([]); c.fillStyle='#8e99b9';
+  c.fillText('avg. 66 days',X(66)+4,T+10);
+  c.fillText('Habit formed (80%)',L+4,Y(WIN_A)-4);
+  c.fillStyle='#c46a7a';c.fillText('Scroll limit (50%)',L+4,Y(SCROLL_MAX)-4);
+  c.fillStyle='#ffffff22'; c.fillRect(X(S.day-1),T,Math.max(2,X(1)-X(0)),H-T-B);
+  ACT_IDS.forEach(id=>{
+    const h=S.habits[id], pts=[...h.hist];
+    if(pts.length<=1 && h.A===0)return;
+    pts[S.day-1]=h.A;
+    c.strokeStyle=NODES[ACTS[id].main].color; c.lineWidth=2.5; c.beginPath();
+    pts.forEach((v,d)=>{d?c.lineTo(X(d),Y(v)):c.moveTo(X(d),Y(v));});
+    c.stroke();
+    const ld=pts.length-1; c.fillStyle=c.strokeStyle;
+    c.beginPath();c.arc(X(ld),Y(pts[ld]),3.5,0,7);c.fill();
+    c.fillText(ACTS[id].emoji,Math.min(X(ld)+6,W-R-14),Y(pts[ld])+4);
+  });
+}
+function renderAll(){renderHud();renderGoals();renderActs();renderTable();drawChart();}
+
+/* ---------- Quiz ---------- */
+const QUIZ=[
+  ['Why do the connections get thicker when you repeat an activity?',['Neurons that fire together wire together – synapses get more efficient (LTP)','The brain grows new regions','Blood flow permanently doubles'],0,'Repeated co-activation strengthens synapses: long-term potentiation.'],
+  ['On average, how long did it take for a new behavior to become automatic in the Lally study?',['21 days','66 days','1 year'],1,'Median 66 days – with a huge range from 18 to 254 days.'],
+  ['Why does scrolling become a habit so fast?',['It is very healthy','Instant, unpredictable rewards + almost no PFC effort','It uses the most neurons'],1,'Variable rewards give strong dopamine signals, and the loop needs almost no conscious control.'],
+  ['Which region takes over once a behavior is automatic?',['Prefrontal cortex','Striatum / basal ganglia','Amygdala'],1,'Control shifts from the effortful PFC to the striatum – the autopilot.'],
+  ['When is a lot of learning locked into long-term memory?',['During sleep','While scrolling','Only during exams'],0,'Sleep consolidates what you practiced during the day.'],
+  ['Why are relapses into old habits so easy?',['Old paths are deleted instantly','Old connections weaken but don’t fully disappear','Habits are genetic'],1,'Unused paths weaken, but a trace stays – one trigger can reactivate it.']
+];
+let qScore=0,qDone=0;
+function renderQuiz(){
+  $('quiz').innerHTML=QUIZ.map((q,i)=>`<div class="q" data-q="${i}"><h3>${i+1}. ${q[0]}</h3>${q[1].map((o,j)=>`<button data-o="${j}">${o}</button>`).join('')}<div class="fb"></div></div>`).join('');
+  $('quiz').querySelectorAll('.q').forEach(qe=>{
+    const i=+qe.dataset.q;
+    qe.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      if(qe.dataset.done)return; qe.dataset.done=1; qDone++;
+      const right=+b.dataset.o===QUIZ[i][2];
+      if(right)qScore++;
+      b.classList.add(right?'right':'wrong');
+      qe.querySelectorAll('button')[QUIZ[i][2]].classList.add('right');
+      qe.querySelector('.fb').textContent=(right?'✅ Correct. ':'❌ Not quite. ')+QUIZ[i][3];
+      $('score').textContent=`– ${qScore}/${qDone}`+(qDone===QUIZ.length?(qScore===QUIZ.length?' 🧠 Perfect!':''):'');
+    });
+  });
+}
+
+/* ---------- Toast & misc ---------- */
+let tT;
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('show'),4500);}
+const words=['Hello!','Привет!','Hola!','Bonjour','Ciao!','Merhaba','Olá!','こんにちは'];let wi=0;
+setInterval(()=>{$('langWord').textContent=words[wi=(wi+1)%words.length];},1100);
+let br=0;setInterval(()=>{$('breathText').textContent=(br^=1)?'breathe out …':'breathe in …';},2000);
+
+$('placeAll').onclick=()=>{ORDER.forEach(id=>{if(!S.placed[id]){S.placed[id]=true;S.pos[id]={...HOME[id]};ripple(id);}});renderActs();toast('All 5 neurons are in the brain. Now pick an activity!');};
+$('resetBtn').onclick=()=>{if(S.busy)return;closeModal();restart();};
+$('nextDay').onclick=nextDay;
+$('ff7').onclick=()=>fastForward(7);
+$('ff30').onclick=()=>fastForward(30);
+window.addEventListener('resize',drawChart);
+
+buildEdges();buildNodes();renderLegend();renderInfo(null);renderAll();renderQuiz();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
