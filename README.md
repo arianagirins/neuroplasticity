@@ -2,7 +2,7 @@
 
 An interactive browser game that shows what happens in your brain when you build (or break) a habit.
 
-**▶ Play it here:** https://YOUR-USERNAME.github.io/YOUR-REPO/
+**▶ Play it here:** https://arianagirins.github.io/neuroplasticity/
 
 ## What it is
 
